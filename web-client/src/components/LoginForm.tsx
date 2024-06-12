@@ -29,7 +29,7 @@ const LoginForm: React.FC = () => {
       console.log('User logged in successfully:', data);
 
       authContext?.login(data.access_token);
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error during login:', error);
     }
