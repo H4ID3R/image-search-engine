@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface Image {
   image_url: string;
@@ -10,6 +11,14 @@ interface Image {
 const ImageGallery: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // Check if token is present. If not, return to home page
+  useEffect(() => {
+    if (!authContext?.token) {
+      navigate('/');
+    }
+  }, [authContext?.token, navigate]);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -27,7 +36,7 @@ const ImageGallery: React.FC = () => {
         }
 
         const data: Image[] = await response.json();
-        authContext?.addImages(data);
+        authContext?.setImages(data); // Replace images instead of adding
       } catch (error) {
         console.error('Error fetching images:', error);
       } finally {
@@ -38,7 +47,7 @@ const ImageGallery: React.FC = () => {
     if (authContext?.token && authContext?.images.length === 0) {
       fetchImages();
     }
-  }, [authContext?.token, authContext]);
+  }, [authContext]); // Use an empty dependency array to fetch images only once
 
   return (
     <div>

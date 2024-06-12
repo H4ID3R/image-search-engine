@@ -12,6 +12,7 @@ interface AuthContextType {
   logout: () => void;
   token: string | null;
   images: Image[];
+  setImages: (newImages: Image[]) => void;
   addImages: (newImages: Image[]) => void;
 }
 
@@ -48,7 +49,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, token, images, addImages }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, token, images, setImages, addImages }}>
       {children}
     </AuthContext.Provider>
   );
