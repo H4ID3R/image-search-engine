@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
-from fastapi import Depends, HTTPException, Request, status
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from google.cloud import firestore
 from pydantic import BaseModel
@@ -14,8 +14,8 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
-def create_access_token(email: str, expires_delta: timedelta):
-    to_encode = {"sub": email}
+def create_access_token(user_id: str, email: str, expires_delta: timedelta):
+    to_encode = {"sub": email, "user_id": user_id}
     expire = datetime.now(timezone.utc) + expires_delta
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, Config.SECRET_KEY, algorithm=Config.ALGORITHM)
@@ -30,21 +30,18 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, Config.SECRET_KEY, algorithms=[Config.ALGORITHM])
         email: str = payload.get("sub")
-        if email is None:
+        user_id: str = payload.get("user_id")
+        if email is None or user_id is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
 
     firestore_client = firestore.Client()
-    users_ref = firestore_client.collection('users')
-    user_query = users_ref.where('email', '==', email).stream()
-    user = None
-    for u in user_query:
-        user = u
-    if user is None:
+    user_ref = firestore_client.collection('users').document(user_id)
+    user_snapshot = user_ref.get()
+    if not user_snapshot.exists:
         raise credentials_exception
-    return user
 
-
-
-
+    user_data = user_snapshot.to_dict()
+    user_data['id'] = user_id  # Add user_id to user_data
+    return user_data
