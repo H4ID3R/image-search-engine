@@ -14,6 +14,7 @@ interface AuthContextType {
   images: Image[];
   setImages: (newImages: Image[]) => void;
   addImages: (newImages: Image[]) => void;
+  loading: boolean; // Add loading state
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,6 +23,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [token, setToken] = useState<string | null>(null);
   const [images, setImages] = useState<Image[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Initialize loading state
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
@@ -29,6 +31,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       setToken(savedToken);
       setIsAuthenticated(true);
     }
+    setLoading(false); // Set loading to false after checking localStorage
   }, []);
 
   const login = (token: string) => {
@@ -49,7 +52,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, token, images, setImages, addImages }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, token, images, setImages, addImages, loading }}>
       {children}
     </AuthContext.Provider>
   );

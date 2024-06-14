@@ -13,12 +13,12 @@ const ImageGallery: React.FC = () => {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Check if token is present. If not, return to home page
+  // Check if token is present and not loading. If not, return to home page
   useEffect(() => {
-    if (!authContext?.token) {
+    if (!authContext?.loading && !authContext?.token) {
       navigate('/');
     }
-  }, [authContext?.token, navigate]);
+  }, [authContext?.token, authContext?.loading, navigate]);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -47,7 +47,7 @@ const ImageGallery: React.FC = () => {
     if (authContext?.token && authContext?.images.length === 0) {
       fetchImages();
     }
-  }, [authContext]); // Use an empty dependency array to fetch images only once
+  }, [authContext?.token, authContext?.images.length]); // Use an empty dependency array to fetch images only once
 
   return (
     <div>
@@ -58,7 +58,6 @@ const ImageGallery: React.FC = () => {
           <img
             key={index}
             src={image.image_url}
-            alt={`Image ${index}`}
             className="w-full h-auto rounded shadow-md transition-transform transform hover:scale-105"
           />
         ))}
