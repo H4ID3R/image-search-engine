@@ -8,6 +8,8 @@ class Config:
     SECRET_KEY = None
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_HOURS = 3
+    PINECONE_API_KEY = None
+
 
     @staticmethod
     def get_secret(secret_name):
@@ -19,3 +21,4 @@ class Config:
     @classmethod
     def initialize(cls):
         cls.SECRET_KEY = cls.get_secret("jwt-secret-key")
+        cls.PINECONE_API_KEY = cls.get_secret("pinecone-api-key")

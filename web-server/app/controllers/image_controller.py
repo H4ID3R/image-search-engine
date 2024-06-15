@@ -6,10 +6,18 @@ from app.schemas.image import ImageResponse
 class ImageController:
     @staticmethod
     async def upload_image(file: UploadFile, user_id: str) -> ImageResponse:
-        response = await ImageService.upload_image(file, user_id)
+        service = ImageService()
+        response = await service.upload_image(file, user_id)
         return ImageResponse(**response)
 
     @staticmethod
     async def list_images(user_id: str) -> List[ImageResponse]:
-        images = await ImageService.list_images(user_id)
-        return images
+        service = ImageService()
+        images = await service.list_images(user_id)
+        return [ImageResponse(**image) for image in images]
+
+    @staticmethod
+    async def search_images(file: UploadFile) -> List[ImageResponse]:
+        service = ImageService()
+        images = await service.search_images(file)
+        return [ImageResponse(**image) for image in images]

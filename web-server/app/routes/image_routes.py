@@ -13,3 +13,7 @@ async def upload_image(file: UploadFile = File(...), user: dict = Depends(get_cu
 @router.get("/list", response_model=List[ImageResponse])
 async def list_images(user: dict = Depends(get_current_user)):
     return await ImageController.list_images(user['id'])
+
+@router.post("/search", response_model=List[ImageResponse])
+async def search_images(file: UploadFile = File(...)):
+    return await ImageController.search_images(file)
