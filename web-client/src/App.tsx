@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignupPage from './pages/SignupPage';
-import LoginPage from './pages/LoginPage';
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
+import ImageSearch from './components/ImageSearch';
+import LoginForm from './components/LoginForm';
+import SignupForm from './components/SignupForm';
 
 const App: React.FC = () => {
   return (
@@ -12,9 +13,10 @@ const App: React.FC = () => {
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />"
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupForm />} />
+            <Route path="/login" element={<LoginForm />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/image-search" element={<ImageSearch />} />
           </Routes>
         </div>
       </div>

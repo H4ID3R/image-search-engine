@@ -47,7 +47,7 @@ const ImageGallery: React.FC = () => {
     if (authContext?.token && authContext?.images.length === 0) {
       fetchImages();
     }
-  }, [authContext?.token, authContext?.images.length]); // Use an empty dependency array to fetch images only once
+  }, [authContext?.token, authContext?.images.length]);
 
   return (
     <div>
