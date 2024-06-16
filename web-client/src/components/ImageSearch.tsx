@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+const apiUrl = process.env.VITE_API_URL;
 
 const ImageSearch: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
@@ -29,7 +30,7 @@ const ImageSearch: React.FC = () => {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/v1/images/search', {
+            const response = await fetch(`${apiUrl}/api/v1/images/search`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${authContext?.token}`,

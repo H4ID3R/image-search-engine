@@ -164,3 +164,4 @@ dist/
 # Static and media files
 static/
 media/
+web-server/application_default_credentials.json

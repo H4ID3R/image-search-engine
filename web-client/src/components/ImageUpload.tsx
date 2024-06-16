@@ -1,5 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+const apiUrl = process.env.VITE_API_URL;
+
 
 const ImageUpload: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
@@ -19,7 +21,7 @@ const ImageUpload: React.FC = () => {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/v1/images/upload', {
+            const response = await fetch(`${apiUrl}/api/v1/images/upload`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${authContext?.token}`,

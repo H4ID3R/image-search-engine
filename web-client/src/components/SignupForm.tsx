@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+const apiUrl = process.env.VITE_API_URL;
+
 
 const SignupForm: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -71,7 +73,7 @@ const SignupForm: React.FC = () => {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/v1/users/register', {
+            const response = await fetch(`${apiUrl}/api/v1/users/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

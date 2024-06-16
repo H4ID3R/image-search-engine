@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+const apiUrl = process.env.VITE_API_URL;
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ const LoginForm: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/v1/users/token', {
+      const response = await fetch(`${apiUrl}/api/v1/users/token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

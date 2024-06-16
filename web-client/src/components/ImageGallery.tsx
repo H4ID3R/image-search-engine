@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+const apiUrl = process.env.VITE_API_URL;
 
 interface Image {
   image_url: string;
@@ -24,7 +25,7 @@ const ImageGallery: React.FC = () => {
     const fetchImages = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/v1/images/list', {
+        const response = await fetch(`${apiUrl}/api/v1/images/list`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${authContext?.token}`,
