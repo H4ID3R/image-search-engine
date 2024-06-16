@@ -1,7 +1,9 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.image_routes import router as image_router
 from app.routes.user_routes import router as user_router
+import uvicorn
 
 app = FastAPI()
 
@@ -24,3 +26,7 @@ app.include_router(user_router, prefix="/api/v1/users", tags=["users"])
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Image Search Engine API"}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run(app, host="0.0.0.0", port=port)

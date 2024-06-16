@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.10-slim
+FROM python:3.12.3
 
 # Set the working directory in the container
 WORKDIR /app
@@ -13,11 +13,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code into the container
 COPY . .
 
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
+# Copy the ADC JSON file into the container
+COPY application_default_credentials.json /app/
 
-# Define environment variable
-ENV PORT=8000
+# Define environment variable for the ADC JSON file
+ENV GOOGLE_APPLICATION_CREDENTIALS="/app/application_default_credentials.json"
+
+# Make port 8080 available to the world outside this container
+EXPOSE 8080
 
 # Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
