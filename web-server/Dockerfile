@@ -14,10 +14,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Copy the ADC JSON file into the container
-COPY application_default_credentials.json /app/
+# COPY application_default_credentials.json /app/
 
-# Define environment variable for the ADC JSON file
-ENV GOOGLE_APPLICATION_CREDENTIALS="/app/application_default_credentials.json"
+# # Define environment variable for the ADC JSON file
+# ENV GOOGLE_APPLICATION_CREDENTIALS="/app/application_default_credentials.json"
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
