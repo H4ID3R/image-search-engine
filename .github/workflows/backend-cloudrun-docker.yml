@@ -43,21 +43,21 @@
 #   Container Registry vs Artifact Registry   - https://cloud.google.com/blog/products/application-development/understanding-artifact-registry-vs-container-registry
 #   Principle of least privilege              - https://cloud.google.com/blog/products/identity-security/dont-get-pwned-practicing-the-principle-of-least-privilege
 
-name: Build and Deploy to Cloud Run
+
+name: Build and Deploy Backend to Cloud Run
 
 on:
   push:
     branches: [ "main" ]
 
 env:
-  PROJECT_ID: jetrr-haider-ali-1 # TODO: update Google Cloud project id
-  GAR_LOCATION: us-central1 # TODO: update Artifact Registry location
-  SERVICE: image-search-backend # TODO: update Cloud Run service name
-  REGION: us-central1 # TODO: update Cloud Run service region
+  PROJECT_ID: jetrr-haider-ali-1
+  GAR_LOCATION: us
+  SERVICE: image-search-backend
+  REGION: us-central1
 
 jobs:
   deploy:
-    # Add 'id-token' with the intended permissions for workload identity federation
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -76,12 +76,10 @@ jobs:
         id: auth
         uses: 'google-github-actions/auth@v1'
         with:
-          project_id: ${{ env.PROJECT_ID }}
           token_format: 'access_token'
-          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}' # e.g. - projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
-          service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}' # e.g. - my-service-account@my-project.iam.gserviceaccount.com
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+          service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}'
 
-      # Authenticate Docker to Google Cloud Artifact Registry
       - name: Docker Auth
         id: docker-auth
         uses: 'docker/login-action@v2'
