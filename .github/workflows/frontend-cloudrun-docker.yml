@@ -42,13 +42,13 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -f web-client/Dockerfile -t us-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }} --push web-client
+          docker buildx build --platform linux/amd64,linux/arm64 -f web-client/Dockerfile -t us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }} --push web-client
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: ${{ env.IMAGE }}
-          image: us-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}
+          image: us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}
           region: ${{ env.REGION }}
 
       - name: Show Output
