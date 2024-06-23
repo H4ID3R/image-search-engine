@@ -10,7 +10,7 @@ app = FastAPI()
 # CORS configuration
 origins = [
     "http://localhost:5173",
-    "https://image-search-backend-36xr6r7mca-uc.a.run.app",
+    "https://frontend-36xr6r7mca-uc.a.run.app",
 ]
 
 app.add_middleware(

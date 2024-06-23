@@ -1,6 +1,8 @@
 # Use an official Python runtime as a parent image
 FROM python:3.12.3-slim
 
+ENV PYTHONUNBUFFERED True
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -13,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code into the container
 COPY . .
 
-# Copy the ADC JSON file into the container
+# # Copy the ADC JSON file into the container
 # COPY application_default_credentials.json /app/
 
 # # Define environment variable for the ADC JSON file

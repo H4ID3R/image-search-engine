@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image
-FROM node:18.16.1
+FROM node:20-alpine
 
 # Set the working directory in the container
 WORKDIR /app
@@ -14,14 +14,10 @@ RUN npm install
 COPY . .
 
 # Build the application
-# RUN npm run build
-
-# Install 'serve' globally
-# RUN npm install -g vite
+RUN npm run build
 
 # Expose port 8080
 EXPOSE 8080
 
 # Command to run the app
-# CMD ["serve", "-s", "dist", "-l", "5000"]
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
