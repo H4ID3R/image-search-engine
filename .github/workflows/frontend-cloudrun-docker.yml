@@ -6,18 +6,19 @@ on:
 
 env:
   PROJECT_ID: jetrr-haider-ali-1
-  GAR_LOCATION: us
-  SERVICE: image-search-frontend
+  GAR_LOCATION: us-central1
+  REPOSITORY: image-search-repo
+  IMAGE: image-search-frontend
   REGION: us-central1
 
 jobs:
   deploy:
-    # Add 'id-token' with the intended permissions for workload identity federation
     permissions:
       contents: 'read'
       id-token: 'write'
 
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -29,33 +30,25 @@ jobs:
 
       - name: Google Auth
         id: auth
-        uses: 'google-github-actions/auth@v1'
+        uses: google-github-actions/auth@v1
         with:
           token_format: 'access_token'
           workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
           service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}'
 
-      # Authenticate Docker to Google Cloud Artifact Registry
-      - name: Docker Auth
-        id: docker-auth
-        uses: 'docker/login-action@v2'
-        with:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.access_token }}'
-          registry: 'us-docker.pkg.dev'
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Build and Push Container
-        run: |-
-          docker build -t "us-docker.pkg.dev/${{ env.PROJECT_ID }}/gcr.io/${{ env.SERVICE }}:${{ github.sha }}" -f web-client/Dockerfile ./web-client
-          docker push "us-docker.pkg.dev/${{ env.PROJECT_ID }}/gcr.io/${{ env.SERVICE }}:${{ github.sha }}"
+      - name: Build and Push Docker Image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 -t us-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }} --push .
 
       - name: Deploy to Cloud Run
-        id: deploy
-        uses: google-github-actions/deploy-cloudrun@v0
+        uses: google-github-actions/deploy-cloudrun@v1
         with:
-          service: ${{ env.SERVICE }}
+          service: ${{ env.IMAGE }}
+          image: us-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}
           region: ${{ env.REGION }}
-          image: "us-docker.pkg.dev/${{ env.PROJECT_ID }}/gcr.io/${{ env.SERVICE }}:${{ github.sha }}"
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
