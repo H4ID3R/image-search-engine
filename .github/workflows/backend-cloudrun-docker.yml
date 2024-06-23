@@ -12,7 +12,6 @@ env:
 
 jobs:
   deploy:
-    # Add 'id-token' with the intended permissions for workload identity federation
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -35,27 +34,26 @@ jobs:
           workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
           service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}'
 
-      # Authenticate Docker to Google Cloud Artifact Registry
       - name: Docker Auth
         id: docker-auth
         uses: 'docker/login-action@v2'
         with:
           username: 'oauth2accesstoken'
           password: '${{ steps.auth.outputs.access_token }}'
-          registry: 'us-docker.pkg.dev'
+          registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
 
       - name: Build and Push Container
-        run: |-
-          docker build -t "us-docker.pkg.dev/jetrr-haider-ali-1/gcr.io/image-search-backend:${{ github.sha }}" -f web-server/Dockerfile ./web-server
-          docker push "us-docker.pkg.dev/jetrr-haider-ali-1/gcr.io/image-search-backend:${{ github.sha }}"
+        run: |
+          docker buildx create --use
+          docker buildx build --platform linux/amd64 -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/gcr.io/${{ env.SERVICE }}:${{ github.sha }}" --push ./web-server
 
       - name: Deploy to Cloud Run
         id: deploy
-        uses: google-github-actions/deploy-cloudrun@v0
+        uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
-          image: "us-docker.pkg.dev/jetrr-haider-ali-1/gcr.io/image-search-backend:${{ github.sha }}"
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/gcr.io/${{ env.SERVICE }}:${{ github.sha }}
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
