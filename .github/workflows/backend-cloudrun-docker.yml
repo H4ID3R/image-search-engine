@@ -3,6 +3,8 @@ name: Build and Deploy Backend to Cloud Run
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - '!README.md'
   workflow_dispatch:
 
 env:
