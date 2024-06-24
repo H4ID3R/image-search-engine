@@ -55,7 +55,7 @@ The project is divided into two main components: the frontend and the backend. E
    - Deployed the Docker container to Google Cloud Run.
 
 3. **Deployment**:
-   - The `Dockerfile` was set up to build the production version of the React app and serve it using Nginx.
+   - The `Dockerfile` was set up to build the production version of the React app and serve it using Apache.
    - Configured Cloud Run to automatically scale the application based on demand.
 
 ### Backend
