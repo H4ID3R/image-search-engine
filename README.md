@@ -14,34 +14,23 @@ This document provides a comprehensive overview of the implementation details of
 
 The project is divided into two main components: the frontend and the backend. Each component is built using modern frameworks and deployed on Google Cloud Run. The overall architecture leverages various Google Cloud services for storage, database, and secret management.
 
-### Component Diagram
 
-+---------------------------+
+#### Frontend
 
-Frontend
-- React with TypeScript
-- TailwindCSS
-- Vite
-- Deployed on Cloud Run
+- **Framework**: React with TypeScript
+- **Styling**: TailwindCSS
+- **Build Tool**: Vite
+- **Deployment**: Google Cloud Run
 
-+---------------------------+
+#### Backend
 
-            |
-            |
-            v
-
-+---------------------------+
-
-Backend
-- FastAPI with Python
-- Deployed on Cloud Run
-- Firestore (Metadata)
-- GCS (Image Storage)
-- Pinecone (Vector DB)
-- Secret Manager (API Keys)
-
-+---------------------------+
-
+- **Framework**: FastAPI with Python
+- **Deployment**: Google Cloud Run
+- **Database**: Firestore for metadata storage
+- **Storage**: Google Cloud Storage (GCS) for image storage
+- **Vector Database**: Pinecone for storing and querying image embeddings
+- **Secret Management**: Google Secret Manager for secure storage of API keys
+- **Image Embeddings**: Managed API from Vertex AI that uses the "multimodalembedding" model
 
 
 ## Implementation Details
@@ -54,7 +43,7 @@ Backend
 - **Build Tool**: Vite
 - **Deployment**: Dockerized and deployed on Google Cloud Run
 
-#### Key Steps
+#### Key Details
 
 1. **Development Environment**:
    - Set up the React application using Vite for fast builds and hot module replacement.
@@ -79,7 +68,7 @@ Backend
 - **Vector Database**: Pinecone for storing and querying image embeddings
 - **Secret Management**: Google Secret Manager for secure storage of API keys
 
-#### Key Steps
+#### Key Details
 
 1. **API Development**:
    - Developed RESTful API endpoints using FastAPI to handle image uploads, retrieval, and similarity search.
@@ -89,18 +78,27 @@ Backend
 2. **Vector Database**:
    - Integrated Pinecone for managing and querying image embeddings, enabling efficient similarity searches.
 
-3. **Secret Management**:
+3. **Image Embeddings**:
+   - Utilized a managed API from Vertex AI to obtain image embeddings using the `multimodalembedding` model.
+   - This approach provides low latency and high availability benefits over hosting a machine learning model directly.
+   - When a user searches for an image, the image embeddings are generated via the managed API, which are then used for similarity search in Pinecone.
+
+4. **Artifact Storage**:
+   - Used Google Artifact Registry (GAR) for storing and managing Docker images of the backend and frontend services.
+   - Configured CI/CD pipelines to push Docker images to GAR before deploying to Cloud Run.
+
+5. **Secret Management**:
    - Used Google Secret Manager to securely store and manage API keys and sensitive information.
    - Configured the application to access secrets at runtime, enhancing security.
 
-4. **CI/CD Pipeline**:
+6. **CI/CD Pipeline**:
    - Configured GitHub Actions to automate the build, test, and deployment process.
    - Dockerized the FastAPI application.
    - Deployed the Docker container to Google Cloud Run.
 
-5. **Authentication and Authorization**:
+7. **Authentication and Authorization**:
    - Implemented JWT-based authentication to secure API endpoints.
-   - Ensured that users can only access their own data through proper authorization mechanisms.
+   - Ensured that users can only access their own data through proper authorization mechanisms as well protected routes.
 
 ## Assumptions and Limitations
 
