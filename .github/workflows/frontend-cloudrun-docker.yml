@@ -3,9 +3,6 @@ name: Build and Deploy Frontend to Cloud Run
 on:
   push:
     branches: [ "main" ]
-    paths:
-        - '!README.md'
-  workflow_dispatch:
     
 
 env:
