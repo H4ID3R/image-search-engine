@@ -1,0 +1,23 @@
+__pycache__
+# Docker-related files
+Dockerfile*
+docker-compose*
+# Git-related files
+.git
+.gitignore
+# Editor and IDE files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+# Temporary files
+tmp/
+*.tmp
+*.swp
+*.DS_Store
+Thumbs.db
+
+# Build directories
+dist/
+build/
+coverage/
