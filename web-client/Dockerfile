@@ -16,8 +16,17 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# stage 2 - the production environment
+FROM nginx:alpine
+
+# Copy the built files from the builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
 # Expose port 8080
 EXPOSE 8080
 
-# Command to run the app
-CMD ["npm", "run", "start"]
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
