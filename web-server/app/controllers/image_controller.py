@@ -15,9 +15,9 @@ class ImageController:
         service = ImageService()
         images = await service.list_images(user_id)
         return [ImageResponse(**image) for image in images]
-
+    
     @staticmethod
-    async def search_images(file: UploadFile) -> List[ImageResponse]:
+    async def search_images(file: UploadFile, user_id: str) -> List[ImageResponse]:  # Add user_id parameter
         service = ImageService()
-        images = await service.search_images(file)
+        images = await service.search_images(file, user_id)  # Pass user_id to service
         return [ImageResponse(**image) for image in images]

@@ -43,5 +43,5 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
 
     user_data = user_snapshot.to_dict()
-    user_data['id'] = user_id  # Add user_id to user_data
+    user_data['id'] = user_id
     return user_data

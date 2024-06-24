@@ -7,7 +7,7 @@ import uvicorn
 
 app = FastAPI()
 
-# CORS configuration
+
 origins = [
     "http://localhost:5173",
     "https://frontend-36xr6r7mca-uc.a.run.app",

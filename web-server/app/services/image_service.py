@@ -17,7 +17,7 @@ class ImageService:
         Config.initialize()
         self.pinecone = Pinecone(api_key=Config.PINECONE_API_KEY)
         self.index = self.pinecone.Index(host='https://image-search-u9dy5c0.svc.aped-4627-b74a.pinecone.io', name='image-search')
-        self.vertex_ai_location = 'us-central1'  # Update with your actual location
+        self.vertex_ai_location = 'us-central1'
         self.model_id = 'multimodalembedding'
         vertexai.init(project=Config.GOOGLE_CLOUD_PROJECT_ID, location=self.vertex_ai_location)
         self.model = MultiModalEmbeddingModel.from_pretrained(self.model_id)
@@ -98,21 +98,17 @@ class ImageService:
         except Exception as e:
             print(f"Error listing images: {e}")
             raise HTTPException(status_code=500, detail="Internal Server Error")
-
-    async def search_images(self, file: UploadFile):
+        
+        
+    async def search_images(self, file: UploadFile, user_id: str):
         try:
-            
             image_bytes = await file.read()
             image = PILImage.open(io.BytesIO(image_bytes))
 
-           
             query_embedding = self._get_image_embedding(image_bytes)
 
-            
             result = self.index.query(vector=query_embedding, top_k=5, include_values=True)
-            print("Pinecone search result:", result)
 
-            
             firestore_client = firestore.Client(project=Config.GOOGLE_CLOUD_PROJECT_ID)
             similar_images = []
             for match in result["matches"]:
@@ -120,11 +116,12 @@ class ImageService:
                 image = image_ref.get()
                 if image.exists:
                     image_data = image.to_dict()
-                    similar_images.append({
-                        "image_url": image_data.get("image_url"),
-                        "filename": image_data.get("filename"),
-                        "uploaded_at": image_data.get("uploaded_at")
-                    })
+                    if image_data["user_id"] == user_id:
+                        similar_images.append({
+                            "image_url": image_data.get("image_url"),
+                            "filename": image_data.get("filename"),
+                            "uploaded_at": image_data.get("uploaded_at")
+                        })
 
             return similar_images
 
