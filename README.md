@@ -4,8 +4,9 @@ This document provides a comprehensive overview of the implementation details of
 
 ## Deployed Application Links
 
-- **Frontend**: [Image-Based Search Engine Frontend](https://frontend-36xr6r7mca-uc.a.run.app/)
-- **Backend**: [Image-Based Search Engine Backend](https://backend-36xr6r7mca-uc.a.run.app)
+- **[Web App](https://frontend-36xr6r7mca-uc.a.run.app/)**
+- **[Server Endpoint](https://backend-36xr6r7mca-uc.a.run.app)**
+- **[API documentation](https://backend-36xr6r7mca-uc.a.run.app/docs)**
 
 
 ## Architecture
@@ -15,14 +16,14 @@ This document provides a comprehensive overview of the implementation details of
 The project is divided into two main components: the frontend and the backend. Each component is built using modern frameworks and deployed on Google Cloud Run. The overall architecture leverages various Google Cloud services for storage, database, and secret management.
 
 
-#### Frontend
+#### Client-side
 
 - **Framework**: React with TypeScript
 - **Styling**: TailwindCSS
 - **Build Tool**: Vite
 - **Deployment**: Google Cloud Run
 
-#### Backend
+#### Server-side
 
 - **Framework**: FastAPI with Python
 - **Deployment**: Google Cloud Run
@@ -35,7 +36,7 @@ The project is divided into two main components: the frontend and the backend. E
 
 ## Implementation Details
 
-### Frontend
+### Client-side
 
 - **Framework**: React
 - **Language**: TypeScript
@@ -58,7 +59,7 @@ The project is divided into two main components: the frontend and the backend. E
    - The `Dockerfile` was set up to build the production version of the React app and serve it using Apache.
    - Configured Cloud Run to automatically scale the application based on demand.
 
-### Backend
+### Server-side
 
 - **Framework**: FastAPI
 - **Language**: Python
