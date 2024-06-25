@@ -43,7 +43,7 @@ class ImageService:
             embedding = self._get_image_embedding(image_bytes) 
 
             image_id = str(uuid.uuid4())
-            self.index.upsert(vectors=[{"id": image_id, "values": embedding}]) 
+            self.index.upsert(vectors=[{"id": image_id, "values": embedding, "metadata": {"user_id": user_id}}]) 
 
             firestore_client = firestore.Client(project=Config.GOOGLE_CLOUD_PROJECT_ID) 
             doc_ref = firestore_client.collection("images").document(image_id)
@@ -107,7 +107,7 @@ class ImageService:
 
             query_embedding = self._get_image_embedding(image_bytes)
 
-            result = self.index.query(vector=query_embedding, top_k=5, include_values=True)
+            result = self.index.query(vector=query_embedding, top_k=5, include_values=True, filter={"user_id": {"$eq": user_id}})
 
             firestore_client = firestore.Client(project=Config.GOOGLE_CLOUD_PROJECT_ID)
             similar_images = []
